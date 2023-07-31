@@ -16,6 +16,7 @@ package com.elishaazaria.sayboard.ime;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.inputmethodservice.InputMethodService;
@@ -39,10 +40,18 @@ import com.elishaazaria.sayboard.R;
 import com.elishaazaria.sayboard.preferences.LogicPreferences;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LifecycleRegistry;
+
+import io.branch.indexing.BranchUniversalObject;
+import io.branch.referral.Branch;
+import io.branch.referral.BranchError;
+import io.branch.referral.util.BRANCH_STANDARD_EVENT;
+import io.branch.referral.util.BranchEvent;
+import io.branch.referral.util.LinkProperties;
 
 public class IME extends InputMethodService implements RecognitionListener, LifecycleOwner {
     private final LifecycleRegistry lifecycleRegistry = new LifecycleRegistry(this);
@@ -54,10 +63,24 @@ public class IME extends InputMethodService implements RecognitionListener, Life
     private ActionManager actionManager;
     private TextManager textManager;
 
+    private Branch branch;
+
 
     @Override
     public void onCreate() {
         super.onCreate();
+        Branch.getAutoInstance(getApplicationContext());
+
+        Log.d("before branch", "service");
+        new BranchEvent(BRANCH_STANDARD_EVENT.SEARCH)
+                .setCustomerEventAlias("my_custom_alias")
+                .setDescription("Product Search")
+                .setSearchQuery("product name")
+                .addCustomDataProperty("Custom_Event_Property_Key1", "Custom_Event_Property_val1")
+                .logEvent(getApplicationContext());
+
+        Log.d("after branch", "service");
+        //Branch.getInstance(this);
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE);
         LibVosk.setLogLevel(BuildConfig.DEBUG ? LogLevel.INFO : LogLevel.WARNINGS);
 
@@ -73,8 +96,22 @@ public class IME extends InputMethodService implements RecognitionListener, Life
     }
 
     @Override
+    public void onStart(Intent intent, int startId) {
+        super.onStart(intent, startId);
+
+
+    }
+
+
+    @Override
     public void onInitializeInterface() {
         checkMicrophonePermission();
+        new BranchEvent(BRANCH_STANDARD_EVENT.SEARCH)
+                .setCustomerEventAlias("my_custom_alias")
+                .setDescription("Product Search")
+                .setSearchQuery("product name")
+                .addCustomDataProperty("Custom_Event_Property_Key1", "Custom_Event_Property_val1")
+                .logEvent(getApplicationContext());
     }
 
     @Override
@@ -91,6 +128,15 @@ public class IME extends InputMethodService implements RecognitionListener, Life
 
         // text input has started
         this.editorInfo = info;
+
+
+
+        new BranchEvent(BRANCH_STANDARD_EVENT.SEARCH)
+                .setCustomerEventAlias("my_custom_alias")
+                .setDescription("Product Search")
+                .setSearchQuery("product name")
+                .addCustomDataProperty("Custom_Event_Property_Key1", "Custom_Event_Property_val1")
+                .logEvent(getApplicationContext());
 
         // get enter action
         int action = editorInfo.imeOptions & EditorInfo.IME_MASK_ACTION;

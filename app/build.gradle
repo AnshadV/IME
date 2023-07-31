@@ -76,4 +76,8 @@ dependencies {
     implementation 'io.grpc:grpc-protobuf-lite:1.52.0'
     implementation 'io.grpc:grpc-stub:1.52.0'
     compileOnly 'org.apache.tomcat:annotations-api:6.0.53' // necessary for Java 9+
+
+
+    implementation 'io.branch.sdk.android:library:5.4.0'
+    implementation 'com.google.android.gms:play-services-ads-identifier:17.1.0+'
 }

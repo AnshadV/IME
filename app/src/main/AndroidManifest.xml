@@ -9,7 +9,7 @@
 
     <application
         android:name=".SayboardApplication"
-        android:allowBackup="false"
+        android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
@@ -39,11 +39,40 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <intent-filter>
+                <!-- If utilizing $deeplink_path please explicitly declare your hosts, or utilize a wildcard(*) -->
+                <data android:scheme="captureandupload" android:host="open" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+
+            <!-- Branch App Links - Live App -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" android:host="harshini.app.link" />
+                <!-- example-alternate domain is required for App Links when the Journeys/Web SDK and Deepviews are used inside your website.  -->
+                <data android:scheme="https" android:host="harshini-alternate.app.link" />
+            </intent-filter>
+            <!-- Branch App Links - Test App -->
+
         </activity>
+        <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_ck6IJqwt5nv96xoYaQYRikamEwdhwI4r" />
+        <meta-data android:name="io.branch.sdk.TestMode" android:value="false" />
 
         <service
             android:name="com.elishaazaria.sayboard.downloader.FileDownloadService"
             android:enabled="true" />
     </application>
+
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.SEND" />
+            <data android:mimeType="text/plain" />
+        </intent>
+    </queries>
 
 </manifest>
